@@ -50,6 +50,7 @@ flutter:
    - images/Nex.png
    - images/nexusfrontier-logo.png
    - images/remote.png
+   - images/power.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

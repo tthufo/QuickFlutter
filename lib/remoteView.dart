@@ -28,16 +28,16 @@ class RemoteView extends StatelessWidget {
       body: Center(
         child: Remote(),
       ),
-       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MenuView(data: [])
-          ));
-        },
-        tooltip: '',
-        child: const Icon(Icons.arrow_right),
-      ),
+      //  floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => MenuView(data: [])
+      //     ));
+      //   },
+      //   tooltip: '',
+      //   child: const Icon(Icons.arrow_right),
+      // ),
     ))
     ;
   }
@@ -334,20 +334,38 @@ Container optioning(String title, { Function onClickAction }) {
       children: <Widget>[
         Expanded(
           child: Container (
-              alignment: Alignment.topRight,
-              padding: EdgeInsets.all(10),
-              child: Text(uInfo.containsKey("informations") ? '${uInfo["informations"]["company_name"]}, welcome!' : "", style: 
-                TextStyle(
-                  fontSize: 22,
-                  color: Colors.blueGrey,
-                  fontWeight: FontWeight.bold,
-                ), 
+              // alignment: Alignment.topRight,
+              // padding: EdgeInsets.all(10),
+              child: Row( 
+                children: <Widget>[ 
+                  Spacer(),
+                  Text(uInfo.containsKey("informations") ? '${uInfo["informations"]["company_name"]}, welcome!' : "", style: 
+                    TextStyle(
+                      fontSize: 22,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.bold,
+                    ), 
+                  ),
+                  IconButton(
+                    icon: Image.asset('images/power.png'),
+                    iconSize: 20,
+                    onPressed: () {
+                       _confirmDialog(context,
+                        onClickAction: () {
+                        removeToken();
+                        Navigator.of(context, rootNavigator: false).pop();
+                        Navigator.of(context, rootNavigator: false).pop();
+                        }
+                      );
+                    },
+                  ),
+                ]
               )
             ),
           flex: 1),
         Expanded(
           child: Center (
-        child: SingleChildScrollView (
+          child: SingleChildScrollView (
                     child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -359,11 +377,27 @@ Container optioning(String title, { Function onClickAction }) {
             width: 80.0,
           ) 
             :
-          Image.asset(
+          IconButton(
+            icon: Image.asset(
               "images/remote.png",
               height: 150,
               width: 150,
             ),
+            iconSize: 200,
+            onPressed: () {
+              //   _confirmDialog(context,
+              //   onClickAction: () {
+              //   removeToken();
+              //   Navigator.of(context, rootNavigator: false).pop();
+              //   Navigator.of(context, rootNavigator: false).pop();
+              //   }
+              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MenuView(data: [])
+              ));
+            },
+          ),
           SizedBox(height: 20),
           buttoning("1/2 Morning", 
             onClickAction: () { 
@@ -400,26 +434,37 @@ Container optioning(String title, { Function onClickAction }) {
         child: Container (
             alignment: Alignment.topLeft,
             padding: EdgeInsets.all(10),
-            child: FlatButton(
-                child: Text('Log_out',
+            child: Row (
+              children: <Widget> [
+              FlatButton(
+                child: Text('powered_by_',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 12,
                     color: Colors.black,
-                    decoration: TextDecoration.underline,
+                    // decoration: TextDecoration.underline,
                   ),
                 ),
-                onPressed: () {
-                  _confirmDialog(context,
-                    onClickAction: () {
-                      // Navigator.pop()
-                      // Navigator.pop(context)
-                      removeToken();
-                      Navigator.of(context, rootNavigator: false).pop();
-                      Navigator.of(context, rootNavigator: false).pop();
-                    }
-                  );
-                },
-              )
+                onPressed: null,
+                //  () {
+                //   _confirmDialog(context,
+                //     onClickAction: () {
+                //       // Navigator.pop()
+                //       // Navigator.pop(context)
+                //       removeToken();
+                //       Navigator.of(context, rootNavigator: false).pop();
+                //       Navigator.of(context, rootNavigator: false).pop();
+                //     }
+                //   );
+                // },
+              ), Text('Flutter',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                  // decoration: TextDecoration.underline,
+                ),
+              ) 
+            ])
           ),
         flex: 1)
       ]
