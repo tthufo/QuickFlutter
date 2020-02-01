@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:progress_hud/progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quick_remote/examView.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 var host = 'https://insight.nexusfrontier.tech/api/v1';
 
@@ -28,16 +29,6 @@ class RemoteView extends StatelessWidget {
       body: Center(
         child: Remote(),
       ),
-      //  floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => MenuView(data: [])
-      //     ));
-      //   },
-      //   tooltip: '',
-      //   child: const Icon(Icons.arrow_right),
-      // ),
     ))
     ;
   }
@@ -50,6 +41,9 @@ class Remote extends StatefulWidget {
 
 class _MyHomePageState extends State<Remote> with WidgetsBindingObserver {
 
+  FlutterLocalNotificationsPlugin localNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   List<dynamic> test =  List<dynamic>();
 
   String session = "";
@@ -59,6 +53,31 @@ class _MyHomePageState extends State<Remote> with WidgetsBindingObserver {
   ProgressHUD _progressHUD;
 
   bool _loading = false;
+
+  initializeNotifications() async {
+    var initializeAndroid = AndroidInitializationSettings('ic_launcher');
+    var initializeIOS = IOSInitializationSettings();
+    var initSettings = InitializationSettings(initializeAndroid, initializeIOS);
+    await localNotificationsPlugin.initialize(initSettings);
+  }
+
+  Future singleNotification(
+      DateTime datetime, String message, String subtext, int hashcode,
+      {String sound}) async {
+    var androidChannel = AndroidNotificationDetails(
+      'channel-id',
+      'channel-name',
+      'channel-description',
+      importance: Importance.Max,
+      priority: Priority.Max,
+    );
+
+    var iosChannel = IOSNotificationDetails();
+    var platformChannel = NotificationDetails(androidChannel, iosChannel);
+    localNotificationsPlugin.schedule(
+        hashcode, message, subtext, datetime, platformChannel,
+        payload: hashcode.toString());
+  }
 
   List<String> options = [
     "Due to health issue, i'm working remotely {{}}. Please be informed.",
@@ -157,6 +176,7 @@ class _MyHomePageState extends State<Remote> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    initializeNotifications();
     super.initState();
     _textFieldController.text = "";
     _progressHUD = new ProgressHUD(
@@ -206,7 +226,19 @@ class _MyHomePageState extends State<Remote> with WidgetsBindingObserver {
           actions: <Widget>[
             FlatButton(
               child: Text('Ờ'),
-              onPressed: () {
+              onPressed: 
+        //       () async {
+        //   DateTime now = DateTime.now().toUtc().add(
+        //         Duration(seconds: 15),
+        //       );
+        //   await singleNotification(
+        //     now,
+        //     "Notification",
+        //     "This is a notification",
+        //     98123871,
+        //   );
+        // }
+              () {
                 onClickAction();
               },
             ),
@@ -424,7 +456,6 @@ Container optioning(String title, { Function onClickAction }) {
               });
               _textFieldController.text = options[0].replaceAll(new RegExp(r'{{}}'), session == "day" ? "to" +  session : "this " + session);
               _displayDialog(context);
-              getProfile();
             },
           ),
         ],
